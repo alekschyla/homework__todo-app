@@ -128,7 +128,8 @@ class TodoApp {
     }
 
     search(value) {
-        return this.todos.filter((todo) => todo.todoText.includes(value));
+        value = value.replace(/ /g,'').toLowerCase();
+        return this.todos.filter((todo) => todo.todoText.replace(/ /g,'').toLowerCase().includes(value));
     }
 }
 
