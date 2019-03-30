@@ -18,6 +18,12 @@
     justify-content: center;
 }
 
+.search-container {
+    display: flex;
+    margin: 10px;
+    justify-content: center;
+}
+
 .todo-container {
     display: flex;
     justify-content: space-between;
@@ -41,6 +47,7 @@ input:focus {
 }
 
 button {
+    margin-right: 5px;
     padding: 5px 10px;
     background: none;
     border: 1px solid #eee;

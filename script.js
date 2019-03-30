@@ -6,12 +6,18 @@ class TodoApp {
         this.render();
     }
 
-    render(){
+    render() {
         this.container.innerHTML = '';
 
         this.renderForm();
+        this.renderSearch();
+
+        const todoContainer = document.createElement('div');
+        todoContainer.classList.add('todos-container');
+        this.container.appendChild(todoContainer);
+
         this.todos.forEach(
-            (todo, index) => this.renderTodo(todo, index)
+            (todo, index) => this.renderTodo(todo, index, todoContainer)
         );
     }
 
@@ -29,8 +35,40 @@ class TodoApp {
         this.container.appendChild(div);
     }
 
+    renderSearch() {
+        const div = document.createElement('div');
+        const input = document.createElement('input');
+        const buttonSearch = document.createElement('button');
+        const buttonClear = document.createElement('button');
+
+        div.classList.add('search-container');
+        buttonSearch.innerText = 'wyszukaj';
+        buttonClear.innerText = 'wyczyść';
+
+        buttonSearch.addEventListener('click', () => {
+            this.render();
+
+            const newTodos = this.search(input.value);
+            const todosContainer = document.querySelector('.todos-container');
+
+            todosContainer.innerHTML = '';
+
+            newTodos.forEach(
+                (todo, index) => this.renderTodo(todo, index, todosContainer)
+            );
+
+        });
+
+        buttonClear.addEventListener('click', () => this.render());
+
+        div.appendChild(input);
+        div.appendChild(buttonSearch);
+        div.appendChild(buttonClear);
+        this.container.appendChild(div);
+    }
+
     addTodo(todoText) {
-        const newTodo = new Todo(todoText);
+        const newTodo = new Todo(todoText, false);
         this.todos = this.todos.concat(newTodo);
         this.render();
         this.saveTodos();
@@ -42,7 +80,7 @@ class TodoApp {
         this.saveTodos();
     }
 
-    renderTodo(todo, index) {
+    renderTodo(todo, index, where) {
         const div = document.createElement("div");
         const span = document.createElement('span');
         const deleteButton = document.createElement('button');
@@ -68,19 +106,16 @@ class TodoApp {
 
         div.appendChild(span);
         div.appendChild(deleteButton);
-        this.container.appendChild(div);
+        where.appendChild(div);
     }
 
     toggleTodo(todoIndex) {
         this.todos = this.todos.map(
             (todo, index) => {
                 if (index === todoIndex) {
-                    return {
-                        todoText: todo.todoText,
-                        isCompleted: !todo.isCompleted
-                    }
+                    return new Todo(todo.todoText, !todo.isCompleted)
                 }
-                return todo;
+                return new Todo(todo.todoText, todo.isCompleted)
             }
         );
 
@@ -91,11 +126,15 @@ class TodoApp {
     saveTodos() {
         localStorage.setItem('to-do-list', JSON.stringify(this.todos));
     }
+
+    search(value) {
+        return this.todos.filter((todo) => todo.todoText.includes(value));
+    }
 }
 
 class Todo {
-    constructor(todoText) {
+    constructor(todoText, isCompleted) {
         this.todoText = todoText;
-        this.isCompleted = false;
+        this.isCompleted = isCompleted;
     }
 }
