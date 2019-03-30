@@ -18,6 +18,15 @@
     justify-content: center;
 }
 
+.todo-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.todo {
+    margin: 10px;
+}
+
 input {
     margin-right: 10px;
     padding: 5px;
