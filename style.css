@@ -47,8 +47,13 @@ button {
     height: 27px;
     border-radius: 5px;
     cursor: pointer;
+    transition: 0.3s ease-in-out;
 }
 
 button:focus {
     outline: none;
+}
+
+button:hover {
+    background: #eeeeee;
 }

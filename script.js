@@ -30,10 +30,7 @@ class TodoApp {
     }
 
     addTodo(todoText) {
-        const newTodo = {
-            todoText: todoText,
-            isCompleted: false
-        };
+        const newTodo = new Todo(todoText);
         this.todos = this.todos.concat(newTodo);
         this.render();
         this.saveTodos();
@@ -88,10 +85,17 @@ class TodoApp {
         );
 
         this.render();
+        this.saveTodos();
     }
 
     saveTodos() {
         localStorage.setItem('to-do-list', JSON.stringify(this.todos));
     }
+}
 
+class Todo {
+    constructor(todoText) {
+        this.todoText = todoText;
+        this.isCompleted = false;
+    }
 }
