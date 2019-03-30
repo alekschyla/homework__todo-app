@@ -1,7 +1,8 @@
 class TodoApp {
     constructor(selector) {
         this.container = document.querySelector(selector) || document.body;
-        this.todos = [];
+
+        this.todos = JSON.parse(localStorage.getItem("to-do-list")) || [];
         this.render();
     }
 
@@ -35,11 +36,13 @@ class TodoApp {
         };
         this.todos = this.todos.concat(newTodo);
         this.render();
+        this.saveTodos();
     }
 
     deleteTodo(todoIndex) {
         this.todos.splice(todoIndex, 1);
         this.render();
+        this.saveTodos();
     }
 
     renderTodo(todo, index) {
