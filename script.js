@@ -9,7 +9,7 @@ class TodoApp {
     render() {
         this.container.innerHTML = '';
 
-        this.renderForm();
+
         this.renderSearch();
 
         const todoContainer = document.createElement('div');
@@ -19,6 +19,7 @@ class TodoApp {
         this.todos.forEach(
             (todo, index) => this.renderTodo(todo, index, todoContainer)
         );
+        this.renderForm();
     }
 
     renderForm() {
