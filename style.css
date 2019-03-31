@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: sans-serif;
 }
 
 .container {
@@ -21,6 +22,12 @@
     display: flex;
     margin: 0 0 10px 0;
     justify-content: space-between;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    margin: 0 0px 10px 0;
 }
 
 .todo-container {
@@ -53,6 +60,7 @@ button {
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s ease-in-out;
+    margin-left: 5px;
 }
 
 button:focus {

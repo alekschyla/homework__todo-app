@@ -2,6 +2,9 @@ class TodoApp {
     constructor(selector) {
         this.container = document.querySelector(selector) || document.body;
 
+        this.todosContainer = document.createElement('div');
+        this.todosContainer.classList.add('todos-container');
+
         this.todos = JSON.parse(localStorage.getItem("to-do-list")) || [];
         this.render();
     }
@@ -9,17 +12,51 @@ class TodoApp {
     render() {
         this.container.innerHTML = '';
 
-
         this.renderSearch();
+        this.renderButtons();
 
-        const todoContainer = document.createElement('div');
-        todoContainer.classList.add('todos-container');
-        this.container.appendChild(todoContainer);
 
-        this.todos.forEach(
-            (todo, index) => this.renderTodo(todo, index, todoContainer)
-        );
+        this.renderTodoList();
         this.renderForm();
+    }
+
+    addTodo(todoText) {
+        const newTodo = new Todo(todoText, false);
+        this.todos = this.todos.concat(newTodo);
+        this.render();
+        this.saveTodos();
+    }
+
+    deleteTodo(todoIndex) {
+        this.todos.splice(todoIndex, 1);
+        this.render();
+        this.saveTodos();
+    }
+
+    renderButtons() {
+        const div = document.createElement('div');
+        const buttonAll = document.createElement('button');
+        const buttonCompleted = document.createElement('button');
+        const buttonNotComplited = document.createElement('button');
+
+        div.classList.add('buttons-container');
+        buttonAll.innerText = 'wszystkie';
+        buttonCompleted.innerText = 'zakończone';
+        buttonNotComplited.innerText = 'nie zakończone';
+
+        buttonAll.addEventListener('click', () => this.render());
+        buttonCompleted.addEventListener('click', () => {
+            this.render();
+
+            const completedTodos = this.completedTodos();
+        });
+        buttonNotComplited.addEventListener('click', () => this.notCompletedTodos());
+
+        div.appendChild(buttonAll);
+        div.appendChild(buttonCompleted);
+        div.appendChild(buttonNotComplited);
+
+        this.container.appendChild(div);
     }
 
     renderForm() {
@@ -50,12 +87,11 @@ class TodoApp {
             this.render();
 
             const newTodos = this.search(input.value);
-            const todosContainer = document.querySelector('.todos-container');
 
-            todosContainer.innerHTML = '';
+            this.todosContainer.innerHTML = '';
 
             newTodos.forEach(
-                (todo, index) => this.renderTodo(todo, index, todosContainer)
+                (todo, index) => this.renderTodo(todo, index)
             );
 
         });
@@ -68,20 +104,7 @@ class TodoApp {
         this.container.appendChild(div);
     }
 
-    addTodo(todoText) {
-        const newTodo = new Todo(todoText, false);
-        this.todos = this.todos.concat(newTodo);
-        this.render();
-        this.saveTodos();
-    }
-
-    deleteTodo(todoIndex) {
-        this.todos.splice(todoIndex, 1);
-        this.render();
-        this.saveTodos();
-    }
-
-    renderTodo(todo, index, where) {
+    renderTodo(todo, index) {
         const div = document.createElement("div");
         const span = document.createElement('span');
         const deleteButton = document.createElement('button');
@@ -107,7 +130,16 @@ class TodoApp {
 
         div.appendChild(span);
         div.appendChild(deleteButton);
-        where.appendChild(div);
+        this.todosContainer.appendChild(div);
+    }
+
+    renderTodoList() {
+        this.todosContainer.innerHTML = '';
+        this.container.appendChild(this.todosContainer);
+
+        this.todos.forEach(
+            (todo, index) => this.renderTodo(todo, index)
+        );
     }
 
     toggleTodo(todoIndex) {
@@ -131,6 +163,10 @@ class TodoApp {
     search(value) {
         value = value.replace(/ /g,'').toLowerCase();
         return this.todos.filter((todo) => todo.todoText.replace(/ /g,'').toLowerCase().includes(value));
+    }
+
+    completedTodos() {
+        return this.todos.filter(todo => todo.isCompleted === true);
     }
 }
 
