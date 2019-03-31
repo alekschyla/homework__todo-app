@@ -14,16 +14,17 @@ class TodoApp {
 
         this.renderSearch();
         this.renderButtons();
-
         this.renderTodoList();
         this.renderForm();
     }
 
     addTodo(todoText) {
-        const newTodo = new Todo(todoText, false);
-        this.todos = this.todos.concat(newTodo);
-        this.render();
-        this.saveTodos();
+        if (todoText !== '') {
+            const newTodo = new Todo(todoText, false);
+            this.todos = this.todos.concat(newTodo);
+            this.render();
+            this.saveTodos();
+        }
     }
 
     deleteTodo(todoIndex) {
@@ -36,12 +37,12 @@ class TodoApp {
         const div = document.createElement('div');
         const buttonAll = document.createElement('button');
         const buttonCompleted = document.createElement('button');
-        const buttonNotComplited = document.createElement('button');
+        const buttonNotCompleted = document.createElement('button');
 
         div.classList.add('buttons-container');
         buttonAll.innerText = 'wszystkie';
         buttonCompleted.innerText = 'zakończone';
-        buttonNotComplited.innerText = 'nie zakończone';
+        buttonNotCompleted.innerText = 'nie zakończone';
 
         buttonAll.addEventListener('click', () => this.render());
         buttonCompleted.addEventListener('click', () => {
@@ -55,20 +56,20 @@ class TodoApp {
             );
         });
 
-        buttonNotComplited.addEventListener('click', () => {
+        buttonNotCompleted.addEventListener('click', () => {
             this.render();
             this.todosContainer.innerHTML = '';
 
-            const completedTodos = this.notCompletedTodos();
+            const notCompletedTodos = this.notCompletedTodos();
 
-            completedTodos.forEach(
+            notCompletedTodos.forEach(
                 (todo, index) => this.renderTodo(todo, index)
             );
         });
 
         div.appendChild(buttonAll);
         div.appendChild(buttonCompleted);
-        div.appendChild(buttonNotComplited);
+        div.appendChild(buttonNotCompleted);
 
         this.container.appendChild(div);
     }
