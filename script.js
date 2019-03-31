@@ -15,7 +15,6 @@ class TodoApp {
         this.renderSearch();
         this.renderButtons();
 
-
         this.renderTodoList();
         this.renderForm();
     }
@@ -47,10 +46,25 @@ class TodoApp {
         buttonAll.addEventListener('click', () => this.render());
         buttonCompleted.addEventListener('click', () => {
             this.render();
+            this.todosContainer.innerHTML = '';
 
             const completedTodos = this.completedTodos();
+
+            completedTodos.forEach(
+                (todo, index) => this.renderTodo(todo, index)
+            );
         });
-        buttonNotComplited.addEventListener('click', () => this.notCompletedTodos());
+
+        buttonNotComplited.addEventListener('click', () => {
+            this.render();
+            this.todosContainer.innerHTML = '';
+
+            const completedTodos = this.notCompletedTodos();
+
+            completedTodos.forEach(
+                (todo, index) => this.renderTodo(todo, index)
+            );
+        });
 
         div.appendChild(buttonAll);
         div.appendChild(buttonCompleted);
@@ -85,15 +99,13 @@ class TodoApp {
 
         buttonSearch.addEventListener('click', () => {
             this.render();
+            this.todosContainer.innerHTML = '';
 
             const newTodos = this.search(input.value);
-
-            this.todosContainer.innerHTML = '';
 
             newTodos.forEach(
                 (todo, index) => this.renderTodo(todo, index)
             );
-
         });
 
         buttonClear.addEventListener('click', () => this.render());
@@ -167,6 +179,10 @@ class TodoApp {
 
     completedTodos() {
         return this.todos.filter(todo => todo.isCompleted === true);
+    }
+
+    notCompletedTodos() {
+        return this.todos.filter(todo => todo.isCompleted === false);
     }
 }
 
